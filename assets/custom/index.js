@@ -105,15 +105,37 @@ function deleteCookie(name) {
   })
 }
 
-function vkNotification(id, message) {
-  $.post('https://api.vk.com/method/messages.send', {
-    access_token: 'vk1.a.qKMUf_uHYAM_oqwfThdP-pTiPwAc2GEdQgiFMOcXvrI9LSjp-Zz02qRvHGDt1RBbMhRhL_JePPkmPwtB2OIcLoI3cWyU4NE8CAz5kT0Gj3roWVIkc8kdWE6C4QJ8QSADxb_EDZwsqJfxkKu-ZtuZYiNIExcRG3KAGW1R4RfjgHtrYhDwKyYNDqbKY9plEvYxzJ0uC2TSipXOtfbUEArlAA',
-    user_id: id,
-    random_id: Math.floor(Math.random() * (999999999 - 1)) + 1,
-    message: message,
-    v: '5.92',
-    test_mode: 1
-  }, response => {
-    console.log("Response of vk api:", response);
-  });
+function vkNotification(uId, message) { // uId = 780625466
+
+  JSONPRequest(`https://api.vk.com/method/messages.send?user_ids=${
+    uId
+  }&v=5.92&callback=vkNotificationCallback&access_token=${
+    "vk1.a.qKMUf_uHYAM_oqwfThdP-pTiPwAc2GEdQgiFMOcXvrI9LSjp-Zz02qRvHGDt1RBbMhRhL_JePPkmPwtB2OIcLoI3cWyU4NE8CAz5kT0Gj3roWVIkc8kdWE6C4QJ8QSADxb_EDZwsqJfxkKu-ZtuZYiNIExcRG3KAGW1R4RfjgHtrYhDwKyYNDqbKY9plEvYxzJ0uC2TSipXOtfbUEArlAA"
+  }&random_id=${
+    Math.floor(Math.random() * (999999999 - 1)) + 1
+  }&message=${
+    encodeURI(message)
+  }&test_mode=1`);
+    // https://api.vk.com/method/messages.send?user_ids=780625466&fields=bdate&v=5.131&callback=callbackFunc
+
+  // $.post('https://api.vk.com/method/messages.send', {
+  //   access_token: 'vk1.a.qKMUf_uHYAM_oqwfThdP-pTiPwAc2GEdQgiFMOcXvrI9LSjp-Zz02qRvHGDt1RBbMhRhL_JePPkmPwtB2OIcLoI3cWyU4NE8CAz5kT0Gj3roWVIkc8kdWE6C4QJ8QSADxb_EDZwsqJfxkKu-ZtuZYiNIExcRG3KAGW1R4RfjgHtrYhDwKyYNDqbKY9plEvYxzJ0uC2TSipXOtfbUEArlAA',
+  //   user_id: id,
+  //   random_id: Math.floor(Math.random() * (999999999 - 1)) + 1,
+  //   message: message,
+  //   v: '5.92',
+  //   test_mode: 1
+  // }, response => {
+  //   console.log("Response of vk api:", response);
+  // });
+}
+
+function JSONPRequest(requestStr) {
+  const elem = document.createElement("script");
+  elem.src = requestStr;
+  document.head.appendChild(elem);
+}
+
+function vkNotificationCallback(result) {
+  console.log('VKNotificationResponse: ', result);
 }
